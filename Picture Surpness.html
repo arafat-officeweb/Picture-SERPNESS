@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কোয়ান্টাম ভিশন স্টুডিও ২০৫০ - লাইফটাইম মাস্টার এডিশন</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Hind Siliguri', 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        /* Checkerboard pattern for transparent PNG preview */
+        .bg-checkerboard {
+            background-color: #1e293b;
+            background-image: 
+                linear-gradient(45deg, #0f172a 25%, transparent 25%), 
+                linear-gradient(-45deg, #0f172a 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #0f172a 75%), 
+                linear-gradient(-45deg, transparent 75%, #0f172a 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .bg-pure-white { background: #ffffff !important; }
+        .bg-pure-black { background: #000000 !important; }
+        .bg-chroma-green { background: #00b140 !important; }
+
+        /* Custom sleek range sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #1e293b;
+            border-radius: 999px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #06b6d4;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
+            transition: transform 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #22d3ee;
+        }
+        .drop-active {
+            border-color: #06b6d4 !important;
+            background-color: rgba(6, 182, 212, 0.08) !important;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 select-none">
+
+    <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/80 px-3 sm:px-6 py-2.5">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/25 border border-cyan-400/30">
+                    <i class="fa-solid fa-wand-magic-sparkles text-white text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">কোয়ান্টাম ভিশন স্টুডিও ২০৫০</h1>
+                        <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Master AI</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 hidden sm:block">অটো-ডায়াগনসিস • ৫x৫ ভেক্টর রি-পেইন্টার • বায়ো-স্কিন গার্ড • ১০০+ ব্যাচ ZIP</p>
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- Undo / Redo Group -->
+                <div class="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-0.5">
+                    <button id="undoBtn" disabled title="আগের অবস্থায় যান (Undo)" class="px-2.5 py-1.5 text-xs text-slate-300 hover:text-cyan-400 disabled:opacity-30 transition">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <div class="w-px h-4 bg-slate-800"></div>
+                    <button id="redoBtn" disabled title="পরের অবস্থায় যান (Redo)" class="px-2.5 py-1.5 text-xs text-slate-300 hover:text-cyan-400 disabled:opacity-30 transition">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+
+                <!-- 1 Single Image Upload -->
+                <label for="imageUpload" class="cursor-pointer inline-flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-xl text-xs font-semibold transition">
+                    <i class="fa-solid fa-upload text-cyan-400"></i>
+                    <span>১টি ছবি নিন</span>
+                </label>
+                <input type="file" id="imageUpload" accept="image/*" class="hidden">
+
+                <!-- 100+ Batch Upload Button -->
+                <label for="batchUpload" class="cursor-pointer inline-flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white border border-purple-400/40 px-3.5 py-2 rounded-xl text-xs font-bold shadow-lg shadow-purple-500/25 transition">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>১০০+ ছবি ব্যাচ ও ZIP</span>
+                </label>
+                <input type="file" id="batchUpload" accept="image/*" multiple class="hidden">
+
+                <!-- Upscale Selector -->
+                <select id="upscaleSelect" title="ছবির সাইজ ও কোয়ালিটি বৃদ্ধি" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:border-cyan-500">
+                    <option value="1">1x (অরিজিনাল সাইজ)</option>
+                    <option value="2">2x মাল্টি-স্টেপ AI সুপার আপস্কেল</option>
+                    <option value="4">4x আল্ট্রা HD ক্রিস্টাল আপস্কেল</option>
+                </select>
+
+                <!-- Format Selector -->
+                <select id="formatSelect" title="ফাইল সেভ করার ফরম্যাট" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:border-cyan-500">
+                    <option value="image/png">Lossless PNG (স্টক/স্বচ্ছ)</option>
+                    <option value="image/jpeg">Ultra JPG (100%)</option>
+                    <option value="image/webp">Smart WebP</option>
+                </select>
+
+                <!-- Save Single Image Button -->
+                <button id="downloadBtn" disabled class="inline-flex items-center gap-1.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-lg shadow-emerald-500/20 transition disabled:opacity-40 disabled:pointer-events-none">
+                    <i class="fa-solid fa-download"></i>
+                    <span>আল্ট্রা HD সেভ</span>
+                </button>
+
+                <!-- Quick Guide Button -->
+                <button id="openGuideBtn" class="inline-flex items-center gap-1 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 px-3 py-2 rounded-xl text-xs font-bold transition">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span>কীভাবে কাজ করে?</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="statusToast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900/95 border border-cyan-500/50 text-cyan-200 px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold flex items-center gap-2 backdrop-blur-md">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="statusToastText">প্রসেসিং সম্পন্ন হয়েছে!</span>
+    </div>
+
+    <!-- Interactive Bangla Help Guide Modal -->
+    <div id="guideModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-cyan-500/40 rounded-3xl max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+                <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-book-open text-cyan-400"></i>
+                    সহজ বাংলায় সম্পূর্ণ টুলটির ব্যবহারবিধি
+                </h2>
+                <button id="closeGuideBtn" class="text-slate-400 hover:text-white bg-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold">বন্ধ করুন ✕</button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                <div class="bg-slate-950/70 border border-slate-800 p-3.5 rounded-2xl">
+                    <h3 class="font-bold text-cyan-400 mb-1">১. ১টি ছবি এডিট ও পরীক্ষা করার নিয়ম:</h3>
+                    <p>উপরে <strong>"১টি ছবি নিন"</strong> বাটনে ক্লিক করে যেকোনো ছবি দিন। ছবি দেওয়ার সাথে সাথেই টুলটি নিজে থেকে বুঝে নেবে এটি মানুষের ছবি নাকি প্রাণী/ভেক্টর ছবি এবং সেরা কালার ও শার্পনেস দিয়ে দেবে। এরপর <strong>"আল্ট্রা HD সেভ"</strong> বাটনে চাপলেই ছবি ডাউনলোড হয়ে যাবে।</p>
+                </div>
+                <div class="bg-slate-950/70 border border-slate-800 p-3.5 rounded-2xl">
+                    <h3 class="font-bold text-purple-400 mb-1">২. একসাথে ১০০+ ছবি প্রসেস ও ZIP ডাউনলোড:</h3>
+                    <p>উপরে বেগুনি রঙের <strong>"১০০+ ছবি ব্যাচ ও ZIP"</strong> বাটনে ক্লিক করে একসাথে অনেকগুলো ছবি সিলেক্ট করুন। এরপর পপ-আপ বক্সে <strong>"সবগুলো অটো-প্রসেস ও ZIP তৈরি করুন"</strong> বাটনে ক্লিক করলেই প্রতিটি ছবি আলাদাভাবে সেরা কোয়ালিটিতে প্রসেস হয়ে একটি <strong>.ZIP ফাইল</strong> হিসেবে আপনার কম্পিউটার বা মোবাইলে ডাউনলোড হয়ে যাবে!</p>
+                </div>
+                <div class="bg-slate-950/70 border border-slate-800 p-3.5 rounded-2xl">
+                    <h3 class="font-bold text-emerald-400 mb-1">৩. Adobe Stock ভেক্টর ও প্রাণীর ছবির বিশেষ সুবিধা:</h3>
+                    <p>আপনার সজারু, বাঘ, পাখি বা যেকোনো ট্রান্সপারেন্ট PNG ছবির কিনারায় যদি ধূসর ভাব বা ফাটা দাগ থাকে, তবে ডানপাশের <strong>"এডোবি স্টক ভেক্টর ও প্রাণী প্রো"</strong> বাটনে ক্লিক করবেন। এটি ৫x৫ জুম করে ধূসর জায়গাগুলোতে আসল রঙ বসিয়ে দেবে এবং কালো বর্ডার কুচকুচে কালো করে দেবে।</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="batchModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
+        <div class="bg-slate-900 border border-cyan-500/40 rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 bg-slate-950/60">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center text-white shadow-lg">
+                        <i class="fa-solid fa-boxes-packing text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                            অটো-ইন্টেলিজেন্ট ব্যাচ প্রসেসর ও ZIP ইঞ্জিন
+                            <span id="batchCountBadge" class="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-2.5 py-0.5 rounded-full font-bold">0 টি ছবি</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">প্রতিটি ছবি আলাদাভাবে স্ক্যান করে সেরা সেটিংসে প্রসেস ও এক ক্লিকে ZIP ডাউনলোড</p>
+                    </div>
+                </div>
+                <button id="closeBatchModalBtn" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition">
+                    <i class="fa-solid fa-xmark mr-1"></i> বন্ধ করুন
+                </button>
+            </div>
+
+            <!-- Batch Controls & Progress Bar -->
+            <div class="p-4 bg-slate-950/40 border-b border-slate-800/80 flex flex-col gap-3">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <label class="text-xs text-slate-300 font-semibold flex items-center gap-1.5 bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-xl">
+                            <i class="fa-solid fa-brain text-cyan-400"></i> প্রসেসিং মোড:
+                            <select id="batchModeSelect" class="bg-transparent text-cyan-300 font-bold focus:outline-none">
+                                <option value="auto_smart" class="bg-slate-900">১০০% অটো এআই বেস্ট ম্যাচ (প্রাণী/ভেক্টর/মানুষ)</option>
+                                <option value="animal_vector" class="bg-slate-900">সবগুলো এডোবি স্টক ভেক্টর ও প্রাণী রি-পেইন্ট</option>
+                                <option value="portrait_skin" class="bg-slate-900">সবগুলো ন্যাচারাল পোর্ট্রেট ও স্কিন গার্ড</option>
+                                <option value="current_sliders" class="bg-slate-900">বর্তমান ম্যানুয়াল স্লাইডার সেটিংস</option>
+                            </select>
+                        </label>
+
+                        <label for="batchAddMoreInput" class="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl font-semibold transition">
+                            <i class="fa-solid fa-plus text-cyan-400 mr-1"></i> আরও ছবি যোগ করুন
+                        </label>
+                        <input type="file" id="batchAddMoreInput" accept="image/*" multiple class="hidden">
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button id="startBatchBtn" class="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg shadow-cyan-500/20 transition">
+                            <i class="fa-solid fa-bolt"></i> সবগুলো অটো-প্রসেস ও ZIP তৈরি করুন
+                        </button>
+                        <button id="downloadZipBtn" disabled class="hidden inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg shadow-emerald-500/25 transition">
+                            <i class="fa-solid fa-file-zipper"></i> পুনরায় ZIP ডাউনলোড করুন
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Progress Bar -->
+                <div class="w-full bg-slate-950 rounded-xl p-2.5 border border-slate-800">
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span id="batchStatusLabel" class="text-slate-300 font-semibold">প্রসেসিংয়ের জন্য প্রস্তুত...</span>
+                        <span id="batchPercentLabel" class="text-cyan-400 font-mono font-bold">0% (0/0)</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div id="batchProgressBar" class="h-full w-0 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 transition-all duration-200"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Queue Grid List -->
+            <div id="batchGridList" class="p-4 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 flex-1 max-h-[52vh]">
+                <!-- Dynamically populated file items -->
+            </div>
+        </div>
+    </div>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+        <!-- Left Column: Interactive Canvas & Live Telemetry (8 cols) -->
+        <div class="lg:col-span-8 flex flex-col gap-3.5">
+
+            <!-- Top Inspection Bar (Split Slider, Loupe, Background Tester) -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-2.5 flex flex-wrap items-center justify-between gap-2">
+                <!-- Compare & Zoom Tools -->
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <button id="splitToggleBtn" disabled class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 transition">
+                        <i class="fa-solid fa-arrows-left-right text-cyan-400"></i>
+                        <span>স্প্লিট তুলনা</span>
+                    </button>
+                    <button id="loupeToggleBtn" disabled class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 transition">
+                        <i class="fa-solid fa-magnifying-glass-plus text-purple-400"></i>
+                        <span>জুম লেন্স (3x)</span>
+                    </button>
+                    <button id="holdOriginalBtn" disabled class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 transition">
+                        <i class="fa-regular fa-eye text-amber-400"></i>
+                        <span>চেপে ধরে আসল দেখুন</span>
+                    </button>
+                </div>
+
+                <!-- Transparent PNG Background Checker -->
+                <div class="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded-xl border border-slate-800">
+                    <span class="text-[11px] text-slate-400 mr-1"><i class="fa-solid fa-chess-board mr-1"></i>ব্যাকগ্রাউন্ড:</span>
+                    <button data-bg="checker" class="bg-mode-btn px-2 py-1 rounded-lg text-[11px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">চেকার</button>
+                    <button data-bg="white" class="bg-mode-btn px-2 py-1 rounded-lg text-[11px] font-semibold text-slate-300 hover:bg-slate-800">সাদা</button>
+                    <button data-bg="black" class="bg-mode-btn px-2 py-1 rounded-lg text-[11px] font-semibold text-slate-300 hover:bg-slate-800">কালো</button>
+                    <button data-bg="green" class="bg-mode-btn px-2 py-1 rounded-lg text-[11px] font-semibold text-slate-300 hover:bg-slate-800">গ্রিন</button>
+                </div>
+            </div>
+
+            <!-- Main Canvas Viewport -->
+            <div id="viewportContainer" class="relative min-h-[420px] sm:min-h-[520px] rounded-3xl border-2 border-dashed border-slate-800 bg-checkerboard flex items-center justify-center overflow-hidden shadow-2xl transition-colors">
+
+                <!-- Empty Upload Prompt -->
+                <div id="uploadPrompt" class="text-center p-6 sm:p-8 max-w-lg mx-auto bg-slate-900/95 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur-md z-10">
+                    <div class="w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-cyan-500/30 text-cyan-400">
+                        <i class="fa-solid fa-wand-magic-sparkles text-3xl"></i>
+                    </div>
+                    <span class="text-[11px] font-semibold uppercase tracking-widest text-cyan-400 bg-cyan-950/80 border border-cyan-800/60 px-3 py-1 rounded-full">
+                        বায়ো-স্কিন গার্ড • 5x5 রি-পেইন্টার • ১০০+ ব্যাচ ZIP
+                    </span>
+                    <h3 class="text-lg sm:text-xl font-bold text-white mt-3 mb-2">১টি বা ১০০+ ছবি এখানে একসাথে টেনে ছাড়ুন!</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 mb-6 leading-relaxed">
+                        ১টি ছবি দিলে এখানে লাইভ প্রিভিউ ও এডিট হবে। আর একসাথে একাধিক বা ১০০টি ছবি দিলে স্বয়ংক্রিয়ভাবে প্রতিটি ছবির জন্য সেরা প্রসেসিং করে এক ক্লিকেই <strong>ZIP ফাইল</strong> ডাউনলোড করে দেবে!
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        <label for="imageUpload" class="cursor-pointer inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-cyan-500/25 transition transform hover:-translate-y-0.5 text-xs sm:text-sm">
+                            <i class="fa-solid fa-image"></i> ১টি ছবি প্রিভিউ করুন
+                        </label>
+                        <label for="batchUpload" class="cursor-pointer inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-purple-500/25 transition transform hover:-translate-y-0.5 text-xs sm:text-sm">
+                            <i class="fa-solid fa-boxes-packing"></i> ১০০+ ছবি একসাথে দিন (Auto ZIP)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Rendering Wrapper for Before/After Canvases -->
+                <div id="canvasWrapper" class="relative hidden max-w-full max-h-[72vh] flex items-center justify-center">
+                    <!-- Processed Canvas (Base Layer) -->
+                    <canvas id="afterCanvas" class="max-w-full max-h-[72vh] object-contain block rounded-lg shadow-xl"></canvas>
+
+                    <!-- Original Canvas (Clipped Layer for Split Comparison) -->
+                    <canvas id="beforeCanvas" class="absolute inset-0 max-w-full max-h-[72vh] object-contain pointer-events-none hidden rounded-lg"></canvas>
+
+                    <!-- Split Slider Divider Line -->
+                    <div id="splitSliderLine" class="absolute top-0 bottom-0 w-0.5 bg-cyan-400 shadow-[0_0_12px_#06b6d4] pointer-events-none hidden" style="left: 50%;">
+                        <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-slate-900 border-2 border-cyan-400 text-cyan-300 flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-arrows-left-right text-xs"></i>
+                        </div>
+                        <span class="absolute top-2 right-2 bg-slate-950/80 text-[10px] text-slate-300 px-2 py-0.5 rounded border border-slate-700 whitespace-nowrap">আসল (Original)</span>
+                        <span class="absolute top-2 left-2 bg-cyan-950/90 text-[10px] text-cyan-300 px-2 py-0.5 rounded border border-cyan-600/50 whitespace-nowrap">নতুন (Enhanced)</span>
+                    </div>
+
+                    <!-- 3x Interactive Magnifier Loupe -->
+                    <div id="magnifierLoupe" class="fixed pointer-events-none hidden w-44 h-44 rounded-full border-4 border-cyan-400 shadow-[0_0_30px_rgba(6,182,212,0.5)] overflow-hidden z-50 bg-slate-950">
+                        <canvas id="loupeCanvas" width="176" height="176" class="w-full h-full block"></canvas>
+                        <div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 bg-slate-950/85 text-[9px] text-cyan-300 px-2 py-0.5 rounded-full font-bold border border-cyan-500/30">
+                            3.0x জুম রি-পেইন্ট ভিউ
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Processing Overlay Loader -->
+                <div id="processingLoader" class="absolute inset-0 bg-slate-950/75 backdrop-blur-sm hidden flex-col items-center justify-center z-30">
+                    <div class="w-12 h-12 rounded-full border-4 border-cyan-500/30 border-t-cyan-400 animate-spin mb-3"></div>
+                    <p id="loaderText" class="text-xs sm:text-sm font-bold text-cyan-300">কোয়ান্টাম ইঞ্জিন ছবি প্রসেস করছে...</p>
+                </div>
+            </div>
+
+            <!-- AI Scene Diagnosis & Live RGB Histogram Bar -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                <div class="md:col-span-8 flex flex-col gap-1.5">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-cyan-400">এআই অটো-ডায়াগনসিস রিপোর্ট (Scene Telemetry)</h4>
+                        <span id="imageResolutionBadge" class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded-md ml-auto">কোনো ছবি নেই</span>
+                    </div>
+                    <p id="aiReportText" class="text-xs text-slate-300 leading-relaxed">
+                        ছবি আপলোড করলে স্বয়ংক্রিয়ভাবে ছবির ধরন (মানুষ, প্রাণী বা ভেক্টর ক্লিপআর্ট), ঘোলা ভাব এবং রঙের নিখুঁত বিশ্লেষণ এখানে দেখাবে।
+                    </p>
+                    <div id="diagnosticBadges" class="flex flex-wrap gap-1.5 mt-1">
+                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2.5 py-0.5 rounded-full">অপেক্ষমান...</span>
+                    </div>
+                </div>
+                <div class="md:col-span-4 flex flex-col items-end">
+                    <div class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2">
+                        <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                            <span>লাইভ আরজিবি হিস্টোগ্রাম</span>
+                            <span class="text-cyan-400 font-mono">RGB True-Hue</span>
+                        </div>
+                        <canvas id="histogramCanvas" width="220" height="48" class="w-full h-12 block rounded"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-4 bg-slate-900/95 border border-slate-800 rounded-3xl p-4 sm:p-5 flex flex-col gap-4 shadow-2xl">
+
+            <!-- Section 1: One-Click Master Presets -->
+            <div>
+                <div class="flex items-center justify-between mb-2.5">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt"></i> ১-ক্লিক অটো স্মার্ট প্রিসেট
+                    </h2>
+                    <button id="resetAllBtn" class="text-[11px] text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> রিসেট
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button data-preset="auto_quantum" class="preset-btn col-span-2 bg-gradient-to-r from-cyan-500/20 via-blue-600/20 to-indigo-600/20 hover:from-cyan-500/30 hover:to-indigo-600/30 border border-cyan-500/50 text-white p-2.5 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg transition">
+                        <i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i>
+                        <span>২০৫০ অটো-ম্যাজিক বেস্ট ফিক্স (AI Auto)</span>
+                    </button>
+
+                    <button data-preset="adobe_vector" class="preset-btn bg-slate-950 hover:bg-slate-800 border border-purple-500/40 text-purple-200 p-2.5 rounded-xl text-xs font-bold flex flex-col items-start gap-1 transition">
+                        <span class="flex items-center gap-1.5 text-purple-400"><i class="fa-solid fa-paw"></i> প্রাণী ও ভেক্টর প্রো</span>
+                        <span class="text-[10px] text-slate-400 font-normal">5x5 রি-পেইন্ট ও কালো বর্ডার</span>
+                    </button>
+
+                    <button data-preset="portrait_skin" class="preset-btn bg-slate-950 hover:bg-slate-800 border border-emerald-500/40 text-emerald-200 p-2.5 rounded-xl text-xs font-bold flex flex-col items-start gap-1 transition">
+                        <span class="flex items-center gap-1.5 text-emerald-400"><i class="fa-solid fa-user-shield"></i> ন্যাচারাল পোর্ট্রেট</span>
+                        <span class="text-[10px] text-slate-400 font-normal">মানুষের স্কিন-টোন ১০০% রক্ষা</span>
+                    </button>
+
+                    <button data-preset="ultra_clear" class="preset-btn bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-200 p-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-gem text-sky-400"></i> আল্ট্রা ক্লিয়ার HD
+                    </button>
+
+                    <button data-preset="vivid_lively" class="preset-btn bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-200 p-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-palette text-pink-400"></i> প্রাণবন্ত কালার বুস্ট
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 2: Smart Protection Shields (Toggles) -->
+            <div class="bg-slate-950/90 border border-slate-800/90 rounded-2xl p-3 space-y-2.5">
+                <label class="flex items-center justify-between cursor-pointer">
+                    <div>
+                        <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-heart text-emerald-400"></i> বায়ো-স্কিন ও অরিজিনাল হিউ লক
+                        </span>
+                        <p class="text-[10px] text-slate-400">মানুষের গায়ের রঙ ও মূল কালার পরিবর্তন হতে দেয় না</p>
+                    </div>
+                    <input type="checkbox" id="trueHueLockToggle" checked class="w-4 h-4 accent-cyan-500 rounded cursor-pointer">
+                </label>
+
+                <div class="h-px bg-slate-800/80"></div>
+
+                <label class="flex items-center justify-between cursor-pointer">
+                    <div>
+                        <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-fill-drip text-purple-400"></i> 5x5 জুম কালার রি-পেইন্টার
+                        </span>
+                        <p class="text-[10px] text-slate-400">প্রাণী বা ভেক্টরের ধূসর ও ফাটা জায়গায় আসল রঙ বসায়</p>
+                    </div>
+                    <input type="checkbox" id="recolorToggle" checked class="w-4 h-4 accent-purple-500 rounded cursor-pointer">
+                </label>
+            </div>
+
+            <!-- Section 3: Fine-Tuning Sliders -->
+            <div class="space-y-3 overflow-y-auto max-h-[42vh] pr-1">
+                <!-- Vector Re-paint & Edge Lock -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-purple-300"><i class="fa-solid fa-wand-sparkles mr-1"></i>5x5 সলিড কালার রি-পেইন্ট ও এজ ক্লিন</span>
+                        <span id="val_vectorlock" class="text-cyan-400 font-mono font-bold">0%</span>
+                    </div>
+                    <input type="range" id="ctrl_vectorlock" min="0" max="100" value="0">
+                </div>
+
+                <!-- Black Ink & Pure White Fur Lock -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-amber-300"><i class="fa-solid fa-pen-nib mr-1"></i>কালো বর্ডার ও সাদা লোম বুস্টার</span>
+                        <span id="val_inklock" class="text-cyan-400 font-mono font-bold">0%</span>
+                    </div>
+                    <input type="range" id="ctrl_inklock" min="0" max="100" value="0">
+                </div>
+
+                <!-- Smart Vibrance -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-200">স্মার্ট ভাইব্রেন্স (প্রাণবন্ত রঙ)</span>
+                        <span id="val_vibrance" class="text-cyan-400 font-mono font-bold">0%</span>
+                    </div>
+                    <input type="range" id="ctrl_vibrance" min="0" max="100" value="0">
+                </div>
+
+                <!-- Pure Saturation -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-200">কালার বুস্ট (Saturation)</span>
+                        <span id="val_saturation" class="text-cyan-400 font-mono font-bold">0%</span>
+                    </div>
+                    <input type="range" id="ctrl_saturation" min="-50" max="100" value="0">
+                </div>
+
+                <!-- Edge Sharpness -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-200">ক্রিস্টাল শার্পনেস (স্বচ্ছতা)</span>
+                        <span id="val_sharpness" class="text-cyan-400 font-mono font-bold">0%</span>
+                    </div>
+                    <input type="range" id="ctrl_sharpness" min="0" max="100" value="0">
+                </div>
+
+                <!-- Surface Denoise -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-200">নয়েজ রিমুভাল (দানা ও ঘোলা পরিষ্কার)</span>
+                        <span id="val_denoise" class="text-cyan-400 font-mono font-bold">0</span>
+                    </div>
+                    <input type="range" id="ctrl_denoise" min="0" max="5" step="1" value="0">
+                </div>
+
+                <!-- Dehaze & Clarity -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-200">ডি-হেইজ (আফসা ও কুয়াশা ভাব দূর)</span>
+                        <span id="val_dehaze" class="text-cyan-400 font-mono font-bold">0%</span>
+                    </div>
+                    <input type="range" id="ctrl_dehaze" min="0" max="100" value="0">
+                </div>
+
+                <!-- Auto White Balance -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-200">অটো হোয়াইট-ব্যালেন্স (হলদে ভাব দূর)</span>
+                        <span id="val_whitebalance" class="text-cyan-400 font-mono font-bold">0%</span>
+                    </div>
+                    <input type="range" id="ctrl_whitebalance" min="0" max="100" value="0">
+                </div>
+
+                <!-- Shadow HDR -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-200">এইচডিআর শ্যাডো (অন্ধকার অংশ উজ্জ্বল)</span>
+                        <span id="val_hdr" class="text-cyan-400 font-mono font-bold">0%</span>
+                    </div>
+                    <input type="range" id="ctrl_hdr" min="0" max="100" value="0">
+                </div>
+
+                <!-- Brightness -->
+                <div class="bg-slate-950/60 border border-slate-800/80 p-2.5 rounded-xl">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-200">উজ্জ্বলতা (Brightness)</span>
+                        <span id="val_brightness" class="text-cyan-400 font-mono font-bold">0</span>
+                    </div>
+                    <input type="range" id="ctrl_brightness" min="-40" max="40" value="0">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Core DOM Elements
+        const imageUpload = document.getElementById('imageUpload');
+        const batchUpload = document.getElementById('batchUpload');
+        const upscaleSelect = document.getElementById('upscaleSelect');
+        const formatSelect = document.getElementById('formatSelect');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const undoBtn = document.getElementById('undoBtn');
+        const redoBtn = document.getElementById('redoBtn');
+
+        const viewportContainer = document.getElementById('viewportContainer');
+        const uploadPrompt = document.getElementById('uploadPrompt');
+        const canvasWrapper = document.getElementById('canvasWrapper');
+        const afterCanvas = document.getElementById('afterCanvas');
+        const beforeCanvas = document.getElementById('beforeCanvas');
+        const afterCtx = afterCanvas.getContext('2d', { willReadFrequently: true });
+        const beforeCtx = beforeCanvas.getContext('2d', { willReadFrequently: true });
+
+        const splitToggleBtn = document.getElementById('splitToggleBtn');
+        const loupeToggleBtn = document.getElementById('loupeToggleBtn');
+        const holdOriginalBtn = document.getElementById('holdOriginalBtn');
+        const splitSliderLine = document.getElementById('splitSliderLine');
+        const magnifierLoupe = document.getElementById('magnifierLoupe');
+        const loupeCanvas = document.getElementById('loupeCanvas');
+        const loupeCtx = loupeCanvas.getContext('2d');
+        const processingLoader = document.getElementById('processingLoader');
+        const loaderText = document.getElementById('loaderText');
+
+        const aiReportText = document.getElementById('aiReportText');
+        const diagnosticBadges = document.getElementById('diagnosticBadges');
+        const imageResolutionBadge = document.getElementById('imageResolutionBadge');
+        const histogramCanvas = document.getElementById('histogramCanvas');
+        const histCtx = histogramCanvas.getContext('2d');
+
+        const trueHueLockToggle = document.getElementById('trueHueLockToggle');
+        const recolorToggle = document.getElementById('recolorToggle');
+        const resetAllBtn = document.getElementById('resetAllBtn');
+
+        // Help Modal Elements
+        const openGuideBtn = document.getElementById('openGuideBtn');
+        const closeGuideBtn = document.getElementById('closeGuideBtn');
+        const guideModal = document.getElementById('guideModal');
+
+        openGuideBtn.addEventListener('click', () => guideModal.classList.remove('hidden'));
+        closeGuideBtn.addEventListener('click', () => guideModal.classList.add('hidden'));
+
+        // Slider Controls Map
+        const sliderKeys = ['vectorlock', 'inklock', 'vibrance', 'saturation', 'sharpness', 'denoise', 'dehaze', 'whitebalance', 'hdr', 'brightness'];
+        const controls = {};
+        const labels = {};
+
+        sliderKeys.forEach(k => {
+            controls[k] = document.getElementById(`ctrl_${k}`);
+            labels[k] = document.getElementById(`val_${k}`);
+        });
+
+        // Application State
+        let fullResImage = null;
+        let currentFileName = 'quantum-enhanced';
+        let previewSourceData = null;
+        let lastDiagnosis = null;
+        let isSplitActive = false;
+        let splitRatio = 0.5;
+        let isLoupeActive = false;
+        let historyStack = [];
+        let historyIndex = -1;
+        let renderDebounceTimer = null;
+
+        function showToast(msg) {
+            const toast = document.getElementById('statusToast');
+            const text = document.getElementById('statusToastText');
+            text.textContent = msg;
+            toast.classList.remove('hidden');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 3200);
+        }
+
+        // Background Mode Switcher for Transparent PNGs
+        document.querySelectorAll('.bg-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.bg-mode-btn').forEach(b => {
+                    b.className = 'bg-mode-btn px-2 py-1 rounded-lg text-[11px] font-semibold text-slate-300 hover:bg-slate-800';
+                });
+                btn.className = 'bg-mode-btn px-2 py-1 rounded-lg text-[11px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40';
+                viewportContainer.classList.remove('bg-checkerboard', 'bg-pure-white', 'bg-pure-black', 'bg-chroma-green');
+                const mode = btn.getAttribute('data-bg');
+                if (mode === 'white') viewportContainer.classList.add('bg-pure-white');
+                else if (mode === 'black') viewportContainer.classList.add('bg-pure-black');
+                else if (mode === 'green') viewportContainer.classList.add('bg-chroma-green');
+                else viewportContainer.classList.add('bg-checkerboard');
+            });
+        });
+
+        function getSliderState() {
+            const st = {
+                trueHueLock: trueHueLockToggle.checked,
+                recolor: recolorToggle.checked
+            };
+            sliderKeys.forEach(k => st[k] = parseInt(controls[k].value));
+            return st;
+        }
+
+        function applySliderState(st, recordHistory = false) {
+            trueHueLockToggle.checked = st.trueHueLock;
+            recolorToggle.checked = st.recolor;
+            sliderKeys.forEach(k => {
+                if (typeof st[k] !== 'undefined') {
+                    controls[k].value = st[k];
+                    updateSliderLabel(k, st[k]);
+                }
+            });
+            if (recordHistory) pushHistoryState();
+            scheduleRender();
+        }
+
+        function updateSliderLabel(key, val) {
+            if (key === 'denoise' || key === 'brightness') {
+                labels[key].textContent = val;
+            } else {
+                labels[key].textContent = `${val}%`;
+            }
+        }
+
+        function pushHistoryState() {
+            const snap = getSliderState();
+            historyStack = historyStack.slice(0, historyIndex + 1);
+            historyStack.push(snap);
+            if (historyStack.length > 25) historyStack.shift();
+            else historyIndex++;
+            updateHistoryButtons();
+        }
+
+        function updateHistoryButtons() {
+            undoBtn.disabled = historyIndex <= 0;
+            redoBtn.disabled = historyIndex >= historyStack.length - 1;
+        }
+
+        undoBtn.addEventListener('click', () => {
+            if (historyIndex > 0) {
+                historyIndex--;
+                applySliderState(historyStack[historyIndex], false);
+                updateHistoryButtons();
+            }
+        });
+
+        redoBtn.addEventListener('click', () => {
+            if (historyIndex < historyStack.length - 1) {
+                historyIndex++;
+                applySliderState(historyStack[historyIndex], false);
+                updateHistoryButtons();
+            }
+        });
+
+        sliderKeys.forEach(k => {
+            controls[k].addEventListener('input', () => {
+                updateSliderLabel(k, controls[k].value);
+                scheduleRender();
+            });
+            controls[k].addEventListener('change', () => pushHistoryState());
+        });
+
+        trueHueLockToggle.addEventListener('change', () => {
+            pushHistoryState();
+            scheduleRender();
+        });
+
+        recolorToggle.addEventListener('change', () => {
+            pushHistoryState();
+            scheduleRender();
+        });
+
+        function diagnoseImageCharacteristics(imageData) {
+            const data = imageData.data;
+            const totalPixels = imageData.width * imageData.height;
+            let transparentCount = 0;
+            let skinPixelCount = 0;
+            let opaqueCount = 0;
+            let sumLum = 0;
+            let sumSat = 0;
+            let sumR = 0, sumG = 0, sumB = 0;
+
+            const step = Math.max(1, Math.floor(totalPixels / 15000)) * 4;
+            for (let i = 0; i < data.length; i += step) {
+                const a = data[i + 3];
+                if (a < 240) {
+                    transparentCount++;
+                    continue;
+                }
+                opaqueCount++;
+                const r = data[i], g = data[i + 1], b = data[i + 2];
+                sumR += r; sumG += g; sumB += b;
+
+                const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+                sumLum += lum;
+
+                const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                const sat = max === 0 ? 0 : (max - min) / max;
+                sumSat += sat;
+
+                // YCbCr Bio-Skin Detection
+                const cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
+                const cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+                if (cr >= 135 && cr <= 172 && cb >= 85 && cb <= 128 && r > g && g > b && lum > 45 && lum < 235) {
+                    skinPixelCount++;
+                }
+            }
+
+            const sampledTotal = transparentCount + opaqueCount || 1;
+            const transparencyRatio = transparentCount / sampledTotal;
+            const skinRatio = opaqueCount > 0 ? skinPixelCount / opaqueCount : 0;
+            const avgLum = opaqueCount > 0 ? sumLum / opaqueCount : 128;
+            const avgSat = opaqueCount > 0 ? sumSat / opaqueCount : 0.4;
+
+            const isVectorOrClipart = transparencyRatio > 0.04;
+            const isPortrait = !isVectorOrClipart && skinRatio > 0.14;
+
+            const avgR = opaqueCount > 0 ? sumR / opaqueCount : 128;
+            const avgG = opaqueCount > 0 ? sumG / opaqueCount : 128;
+            const avgB = opaqueCount > 0 ? sumB / opaqueCount : 128;
+            const grayAvg = (avgR + avgG + avgB) / 3 || 1;
+
+            return {
+                isVectorOrClipart,
+                isPortrait,
+                transparencyRatio,
+                skinRatio,
+                avgLum,
+                avgSat,
+                wbScaleR: Math.min(1.22, Math.max(0.82, grayAvg / (avgR || 1))),
+                wbScaleG: Math.min(1.15, Math.max(0.88, grayAvg / (avgG || 1))),
+                wbScaleB: Math.min(1.22, Math.max(0.82, grayAvg / (avgB || 1)))
+            };
+        }
+
+        function applyDeepSubPixelRepaint(src, width, height, strength) {
+            let current = new Uint8ClampedArray(src);
+            const out = new Uint8ClampedArray(src.length);
+            // Multi-pass repainting: 2 passes for deep smudge & gray-edge eradication
+            const passes = strength > 0.65 ? 2 : 1;
+            const radius = 2; // 5x5 deep neighborhood scan
+
+            for (let pass = 0; pass < passes; pass++) {
+                out.set(current);
+                for (let y = radius; y < height - radius; y++) {
+                    for (let x = radius; x < width - radius; x++) {
+                        const idx = (y * width + x) * 4;
+                        const a = current[idx + 3];
+
+                        // 1. Clean faint transparent dust/noise completely
+                        if (a < 32) {
+                            out[idx] = 0; out[idx + 1] = 0; out[idx + 2] = 0; out[idx + 3] = 0;
+                            continue;
+                        }
+
+                        // 2. Alpha Edge Color Decontamination (Fixes white/gray border halo on transparent PNGs)
+                        if (a >= 32 && a < 245) {
+                            let bestEdgeR = current[idx], bestEdgeG = current[idx + 1], bestEdgeB = current[idx + 2];
+                            let foundSolidCore = false;
+                            let maxCoreSat = -1;
+
+                            for (let dy = -radius; dy <= radius; dy++) {
+                                const ny = y + dy;
+                                for (let dx = -radius; dx <= radius; dx++) {
+                                    const nIdx = (ny * width + (x + dx)) * 4;
+                                    if (current[nIdx + 3] >= 248) {
+                                        const nr = current[nIdx], ng = current[nIdx + 1], nb = current[nIdx + 2];
+                                        const nMax = Math.max(nr, ng, nb), nMin = Math.min(nr, ng, nb);
+                                        const nSat = nMax === 0 ? 0 : (nMax - nMin) / nMax;
+                                        if (nSat > maxCoreSat) {
+                                            maxCoreSat = nSat;
+                                            bestEdgeR = nr; bestEdgeG = ng; bestEdgeB = nb;
+                                            foundSolidCore = true;
+                                        }
+                                    }
+                                }
+                            }
+                            if (foundSolidCore) {
+                                out[idx] = bestEdgeR;
+                                out[idx + 1] = bestEdgeG;
+                                out[idx + 2] = bestEdgeB;
+                                // Firm up soft anti-aliased edge for crisp Adobe Stock vector quality
+                                out[idx + 3] = a > 125 ? Math.min(255, Math.round(a + (255 - a) * strength * 0.75)) : a;
+                            }
+                            continue;
+                        }
+
+                        // 3. Solid Interior Muddy/Grayish Smudge Re-Painter & Micro-Quantizer
+                        const r = current[idx], g = current[idx + 1], b = current[idx + 2];
+                        const maxC = Math.max(r, g, b), minC = Math.min(r, g, b);
+                        const sat = maxC === 0 ? 0 : (maxC - minC) / maxC;
+                        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                        let bestR = r, bestG = g, bestB = b, bestSat = sat;
+                        let sumSimR = r * 2, sumSimG = g * 2, sumSimB = b * 2, simWeight = 2;
+
+                        for (let dy = -radius; dy <= radius; dy++) {
+                            const ny = y + dy;
+                            for (let dx = -radius; dx <= radius; dx++) {
+                                if (dx === 0 && dy === 0) continue;
+                                const nIdx = (ny * width + (x + dx)) * 4;
+                                if (current[nIdx + 3] < 220) continue;
+
+                                const nr = current[nIdx], ng = current[nIdx + 1], nb = current[nIdx + 2];
+                                const nMax = Math.max(nr, ng, nb), nMin = Math.min(nr, ng, nb);
+                                const nSat = nMax === 0 ? 0 : (nMax - nMin) / nMax;
+                                const nLum = 0.299 * nr + 0.587 * ng + 0.114 * nb;
+
+                                // If current pixel is faded/grayish near a vibrant zone, pull true solid color
+                                if (sat < 0.48 && lum > 28 && lum < 238) {
+                                    if (nSat > bestSat * 1.15 && Math.abs(nLum - lum) < 68) {
+                                        bestSat = nSat;
+                                        bestR = nr; bestG = ng; bestB = nb;
+                                    }
+                                }
+
+                                // Collect similar colors to flatten compression blotches into pure solid paint
+                                const colorDist = Math.abs(nr - r) + Math.abs(ng - g) + Math.abs(nb - b);
+                                if (colorDist < 36) {
+                                    sumSimR += nr; sumSimG += ng; sumSimB += nb;
+                                    simWeight++;
+                                }
+                            }
+                        }
+
+                        if (bestSat > sat * 1.12) {
+                            // Re-paint faded/muddy transition pixel with dominant true color
+                            const blend = Math.min(0.95, strength * 1.05);
+                            out[idx] = Math.round(r + (bestR - r) * blend);
+                            out[idx + 1] = Math.round(g + (bestG - g) * blend);
+                            out[idx + 2] = Math.round(b + (bestB - b) * blend);
+                        } else if (simWeight > 4) {
+                            // Solidify flat color regions so they look freshly painted without blotches
+                            const flatBlend = strength * 0.65;
+                            const avgR = sumSimR / simWeight, avgG = sumSimG / simWeight, avgB = sumSimB / simWeight;
+                            out[idx] = Math.round(r + (avgR - r) * flatBlend);
+                            out[idx + 1] = Math.round(g + (avgG - g) * flatBlend);
+                            out[idx + 2] = Math.round(b + (avgB - b) * flatBlend);
+                        }
+                    }
+                }
+                current.set(out);
+            }
+            return current;
+        }
+
+        function applyEdgePreservingDenoise(src, width, height, passes) {
+            let current = new Uint8ClampedArray(src);
+            const next = new Uint8ClampedArray(src.length);
+            const radius = 2; // 5x5 spatial bilateral window for deep grain & JPEG artifact removal
+            const colorSigma = 28 + passes * 6;
+
+            for (let p = 0; p < passes; p++) {
+                next.set(current);
+                for (let y = radius; y < height - radius; y++) {
+                    for (let x = radius; x < width - radius; x++) {
+                        const idx = (y * width + x) * 4;
+                        if (current[idx + 3] < 20) continue;
+
+                        const r0 = current[idx], g0 = current[idx + 1], b0 = current[idx + 2];
+                        let sumR = r0 * 4, sumG = g0 * 4, sumB = b0 * 4, wSum = 4;
+
+                        for (let dy = -radius; dy <= radius; dy++) {
+                            const ny = y + dy;
+                            for (let dx = -radius; dx <= radius; dx++) {
+                                if (dx === 0 && dy === 0) continue;
+                                const nIdx = (ny * width + (x + dx)) * 4;
+                                if (current[nIdx + 3] < 20) continue;
+
+                                const nr = current[nIdx], ng = current[nIdx + 1], nb = current[nIdx + 2];
+                                const diff = Math.abs(nr - r0) + Math.abs(ng - g0) + Math.abs(nb - b0);
+
+                                // Strict edge guard: smooths noise inside surfaces while keeping borders 100% razor sharp
+                                if (diff < colorSigma * 2.4) {
+                                    const weight = diff < colorSigma ? 2 : 1;
+                                    sumR += nr * weight;
+                                    sumG += ng * weight;
+                                    sumB += nb * weight;
+                                    wSum += weight;
+                                }
+                            }
+                        }
+                        next[idx] = Math.round(sumR / wSum);
+                        next[idx + 1] = Math.round(sumG / wSum);
+                        next[idx + 2] = Math.round(sumB / wSum);
+                    }
+                }
+                current.set(next);
+            }
+            return current;
+        }
+
+        function applyAlphaSafeSharpen(src, width, height, amount) {
+            const out = new Uint8ClampedArray(src);
+            for (let y = 2; y < height - 2; y++) {
+                for (let x = 2; x < width - 2; x++) {
+                    const idx = (y * width + x) * 4;
+                    const a = src[idx + 3];
+                    if (a < 235) continue;
+
+                    const up = ((y - 1) * width + x) * 4;
+                    const dn = ((y + 1) * width + x) * 4;
+                    const lf = (y * width + (x - 1)) * 4;
+                    const rt = (y * width + (x + 1)) * 4;
+
+                    const ul = ((y - 1) * width + (x - 1)) * 4;
+                    const ur = ((y - 1) * width + (x + 1)) * 4;
+                    const dl = ((y + 1) * width + (x - 1)) * 4;
+                    const dr = ((y + 1) * width + (x + 1)) * 4;
+
+                    // Prevent sharpening across transparent clipart borders (Zero Halo Guarantee)
+                    if (src[up + 3] < 230 || src[dn + 3] < 230 || src[lf + 3] < 230 || src[rt + 3] < 230 ||
+                        src[ul + 3] < 230 || src[ur + 3] < 230 || src[dl + 3] < 230 || src[dr + 3] < 230) {
+                        continue;
+                    }
+
+                    for (let c = 0; c < 3; c++) {
+                        const center = src[idx + c];
+                        // 3x3 Gaussian Kernel Unsharp Mask for finer detail & micro-contrast
+                        const neighborhood = (
+                            (src[up + c] + src[dn + c] + src[lf + c] + src[rt + c]) * 2 +
+                            (src[ul + c] + src[ur + c] + src[dl + c] + src[dr + c])
+                        ) / 12;
+
+                        const diff = center - neighborhood;
+                        // Avoid amplifying tiny 1-level sensor noise while boosting real edges strongly
+                        if (Math.abs(diff) > 1.5) {
+                            const gain = amount * 2.35;
+                            out[idx + c] = Math.min(255, Math.max(0, Math.round(center + diff * gain)));
+                        }
+                    }
+                }
+            }
+            return out;
+        }
+
+        function createMultiStepUpscaledCanvas(imgElement, scaleFactor, maxSafeLimit = 6400) {
+            const origW = imgElement.naturalWidth || imgElement.width;
+            const origH = imgElement.naturalHeight || imgElement.height;
+            let finalW = origW * scaleFactor;
+            let finalH = origH * scaleFactor;
+
+            if (finalW > maxSafeLimit || finalH > maxSafeLimit) {
+                const ratio = maxSafeLimit / Math.max(finalW, finalH);
+                finalW = Math.round(finalW * ratio);
+                finalH = Math.round(finalH * ratio);
+            }
+
+            // Base 1x Canvas
+            let curW = origW;
+            let curH = origH;
+            let currentCanvas = document.createElement('canvas');
+            currentCanvas.width = curW;
+            currentCanvas.height = curH;
+            let curCtx = currentCanvas.getContext('2d', { willReadFrequently: true });
+            curCtx.imageSmoothingEnabled = true;
+            curCtx.imageSmoothingQuality = 'high';
+            curCtx.drawImage(imgElement, 0, 0, curW, curH);
+
+            if (scaleFactor <= 1 || (finalW === origW && finalH === origH)) {
+                return currentCanvas;
+            }
+
+            // Step-by-step progressive 2x super-sampling with intermediate edge recovery
+            while (curW < finalW || curH < finalH) {
+                const nextW = Math.min(finalW, curW * 2);
+                const nextH = Math.min(finalH, curH * 2);
+
+                const stepCanvas = document.createElement('canvas');
+                stepCanvas.width = nextW;
+                stepCanvas.height = nextH;
+                const stepCtx = stepCanvas.getContext('2d', { willReadFrequently: true });
+                stepCtx.imageSmoothingEnabled = true;
+                stepCtx.imageSmoothingQuality = 'high';
+                stepCtx.drawImage(currentCanvas, 0, 0, nextW, nextH);
+
+                // Intermediate Anti-Blur Micro-Sharpen & Edge Solidifier pass
+                const stepImgData = stepCtx.getImageData(0, 0, nextW, nextH);
+                const sharpenedPass = applyAlphaSafeSharpen(stepImgData.data, nextW, nextH, 0.36);
+                stepCtx.putImageData(new ImageData(sharpenedPass, nextW, nextH), 0, 0);
+
+                // Free old step canvas
+                currentCanvas.width = 1;
+                currentCanvas.height = 1;
+                currentCanvas = stepCanvas;
+                curW = nextW;
+                curH = nextH;
+            }
+
+            return currentCanvas;
+        }
+
+        function executeQuantumPipeline(sourceImageData, diag, customParams = null) {
+            const width = sourceImageData.width;
+            const height = sourceImageData.height;
+            let currentData = new Uint8ClampedArray(sourceImageData.data);
+
+            const vectorLockVal = customParams ? customParams.vectorlock : parseInt(controls.vectorlock.value) / 100;
+            const inkLockVal = customParams ? customParams.inklock : parseInt(controls.inklock.value) / 100;
+            const vibranceVal = customParams ? customParams.vibrance : parseInt(controls.vibrance.value) / 100;
+            const satVal = customParams ? customParams.saturation : parseInt(controls.saturation.value) / 100;
+            const wbVal = customParams ? customParams.whitebalance : parseInt(controls.whitebalance.value) / 100;
+            const hdrVal = customParams ? customParams.hdr : parseInt(controls.hdr.value) / 100;
+            const dehazeVal = customParams ? customParams.dehaze : parseInt(controls.dehaze.value) / 100;
+            const brightVal = customParams ? customParams.brightness : parseInt(controls.brightness.value);
+            const denoiseLevel = customParams ? customParams.denoise : parseInt(controls.denoise.value);
+            const sharpLevel = customParams ? customParams.sharpness : parseInt(controls.sharpness.value) / 100;
+            const protectSkin = customParams ? customParams.protectSkin : trueHueLockToggle.checked;
+            const enableRecolor = customParams ? customParams.enableRecolor : recolorToggle.checked;
+
+            // Step 1: 5x5 Deep Bilateral Surface Denoise (cleans noise before sharpening/repainting)
+            if (denoiseLevel > 0) {
+                currentData = applyEdgePreservingDenoise(currentData, width, height, Math.min(4, denoiseLevel));
+            }
+
+            // Step 2: Multi-Pass 5x5 Deep Sub-Pixel Color Re-Painter & Alpha Border Cleaner
+            if (vectorLockVal > 0 && enableRecolor) {
+                currentData = applyDeepSubPixelRepaint(currentData, width, height, vectorLockVal);
+            }
+
+            // Step 3: Per-Pixel Atmospheric Dehaze, True-Hue Lock, White Balance & Ink/Fur Shield
+            const wbR = 1 + ((diag?.wbScaleR || 1) - 1) * wbVal;
+            const wbG = 1 + ((diag?.wbScaleG || 1) - 1) * wbVal;
+            const wbB = 1 + ((diag?.wbScaleB || 1) - 1) * wbVal;
+            const blackFloor = dehazeVal * 34;
+            const whiteCeiling = 255 - dehazeVal * 10;
+
+            for (let i = 0; i < currentData.length; i += 4) {
+                const a = currentData[i + 3];
+                if (a < 10) continue;
+
+                let r = currentData[i] * wbR + brightVal;
+                let g = currentData[i + 1] * wbG + brightVal;
+                let b = currentData[i + 2] * wbB + brightVal;
+
+                // Advanced Dark-Channel Atmospheric Dehaze + Micro S-Curve Contrast
+                if (dehazeVal > 0) {
+                    const minChannel = Math.min(r, g, b);
+                    const hazeThickness = (minChannel / 255) * dehazeVal * 0.42;
+                    const denom = Math.max(40, whiteCeiling - blackFloor);
+
+                    r = ((r - blackFloor * (1 + hazeThickness * 0.4)) / denom) * 255;
+                    g = ((g - blackFloor * (1 + hazeThickness * 0.4)) / denom) * 255;
+                    b = ((b - blackFloor * (1 + hazeThickness * 0.4)) / denom) * 255;
+
+                    // Subtle S-Curve Contrast for Crystal Clear Depth
+                    const sStrength = dehazeVal * 0.28;
+                    const applySCurve = (v) => {
+                        const norm = Math.min(1, Math.max(0, v / 255));
+                        const curved = norm < 0.5
+                            ? 0.5 * Math.pow(2 * norm, 1 + sStrength)
+                            : 1 - 0.5 * Math.pow(2 * (1 - norm), 1 + sStrength);
+                        return curved * 255;
+                    };
+                    r = applySCurve(r);
+                    g = applySCurve(g);
+                    b = applySCurve(b);
+                }
+
+                r = Math.min(255, Math.max(0, r));
+                g = Math.min(255, Math.max(0, g));
+                b = Math.min(255, Math.max(0, b));
+
+                const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                // HDR Shadow Lift
+                if (hdrVal > 0 && lum < 145) {
+                    const lift = (1 - lum / 145) * hdrVal * 38;
+                    r = Math.min(255, r + lift);
+                    g = Math.min(255, g + lift);
+                    b = Math.min(255, b + lift);
+                }
+
+                // Pitch-Black Ink & Pure White Fur Booster (for Vectors/Animals)
+                if (inkLockVal > 0) {
+                    const maxC = Math.max(r, g, b), minC = Math.min(r, g, b);
+                    const cSat = maxC === 0 ? 0 : (maxC - minC) / maxC;
+                    if (lum < 78 && cSat < 0.42) {
+                        const crush = Math.max(0, 1 - inkLockVal * 0.82);
+                        r *= crush; g *= crush; b *= crush;
+                    } else if (lum > 218 && cSat < 0.18) {
+                        const boostW = inkLockVal * 0.78;
+                        r = r + (255 - r) * boostW;
+                        g = g + (255 - g) * boostW;
+                        b = b + (255 - b) * boostW;
+                    }
+                }
+
+                // Bio-Skin Detection for Natural Portrait Protection
+                let skinDampener = 1.0;
+                if (protectSkin) {
+                    const cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
+                    const cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+                    if (cr >= 133 && cr <= 173 && cb >= 84 && cb <= 129 && r > g && g > b) {
+                        skinDampener = 0.25; // Keep human skin 100% natural
+                    }
+                }
+
+                // True-Hue Locked Vibrance & Saturation Boost (with Dehaze Color Recovery)
+                const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                const curSat = max === 0 ? 0 : (max - min) / max;
+
+                // Protect pure white fur & black outlines from getting false color tint
+                if (curSat > 0.03) {
+                    const dehazeColorRecovery = dehazeVal * 0.18 * skinDampener;
+                    const vibGain = vibranceVal * (1 - curSat * 0.62) * 1.22 * skinDampener;
+                    const satGain = satVal * skinDampener + dehazeColorRecovery;
+                    const totalColorFactor = Math.max(0, 1 + vibGain + satGain);
+
+                    const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                    r = gray + (r - gray) * totalColorFactor;
+                    g = gray + (g - gray) * totalColorFactor;
+                    b = gray + (b - gray) * totalColorFactor;
+                }
+
+                currentData[i] = Math.min(255, Math.max(0, Math.round(r)));
+                currentData[i + 1] = Math.min(255, Math.max(0, Math.round(g)));
+                currentData[i + 2] = Math.min(255, Math.max(0, Math.round(b)));
+            }
+
+            // Step 4: Multi-Scale Alpha-Safe Crystal Sharpening
+            if (sharpLevel > 0) {
+                currentData = applyAlphaSafeSharpen(currentData, width, height, sharpLevel);
+            }
+
+            return new ImageData(currentData, width, height);
+        }
+
+        function loadImageFile(file) {
+            if (!file || !file.type.startsWith('image/')) {
+                showToast('অনুগ্রহ করে একটি সঠিক ছবির ফাইল দিন!');
+                return;
+            }
+            currentFileName = file.name.replace(/\.[^/.]+$/, '');
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                URL.revokeObjectURL(url);
+                fullResImage = img;
+
+                // Create responsive preview canvas (up to 1600px for smooth real-time sliders)
+                const maxPreview = 1600;
+                const origW = img.naturalWidth || img.width;
+                const origH = img.naturalHeight || img.height;
+                const scale = Math.min(1, maxPreview / Math.max(origW, origH));
+                const pw = Math.max(1, Math.round(origW * scale));
+                const ph = Math.max(1, Math.round(origH * scale));
+
+                afterCanvas.width = pw;
+                afterCanvas.height = ph;
+                beforeCanvas.width = pw;
+                beforeCanvas.height = ph;
+
+                beforeCtx.clearRect(0, 0, pw, ph);
+                beforeCtx.drawImage(img, 0, 0, pw, ph);
+                previewSourceData = beforeCtx.getImageData(0, 0, pw, ph);
+
+                // Enable UI buttons
+                uploadPrompt.classList.add('hidden');
+                canvasWrapper.classList.remove('hidden');
+                downloadBtn.disabled = false;
+                splitToggleBtn.disabled = false;
+                loupeToggleBtn.disabled = false;
+                holdOriginalBtn.disabled = false;
+
+                imageResolutionBadge.textContent = `${origW} × ${origH} px`;
+
+                // Run AI Diagnosis and Auto-Apply Best Preset
+                lastDiagnosis = diagnoseImageCharacteristics(previewSourceData);
+                updateDiagnosisUI(lastDiagnosis);
+                applySmartPreset('auto_quantum');
+            };
+            img.src = url;
+        }
+
+        function updateDiagnosisUI(diag) {
+            diagnosticBadges.innerHTML = '';
+            const badges = [];
+            if (diag.isVectorOrClipart) {
+                badges.push({ text: 'ভেক্টর / ট্রান্সপারেন্ট PNG শনাক্ত', color: 'bg-purple-500/20 text-purple-300 border-purple-500/40' });
+                badges.push({ text: '5x5 কালার রি-পেইন্টার সক্রিয়', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' });
+                aiReportText.innerHTML = `এই ছবিটিতে <strong>ট্রান্সপারেন্ট ব্যাকগ্রাউন্ড ও ক্লিপআর্ট/প্রাণীর রঙ</strong> শনাক্ত হয়েছে। কিনারার ধূসর ভাব দূর করতে <strong>5x5 ডিপ কালার রি-পেইন্ট</strong> এবং <strong>কালো বর্ডার লক</strong> স্বয়ংক্রিয়ভাবে চালু করা হয়েছে।`;
+            } else if (diag.isPortrait) {
+                badges.push({ text: 'মানুষের মুখ / পোর্ট্রেট শনাক্ত', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' });
+                badges.push({ text: 'বায়ো-স্কিন গার্ড ১০০% লক', color: 'bg-teal-500/20 text-teal-300 border-teal-500/40' });
+                aiReportText.innerHTML = `মানুষের ত্বক (Skin Tone) শনাক্ত হয়েছে। গায়ের রঙ ১০০% প্রাকৃতিক রেখে ছবির চারপাশের রঙ উজ্জ্বল ও ঝকঝকে করা হয়েছে।`;
+            } else {
+                badges.push({ text: 'প্রকৃতি / অবজেক্ট ফটো', color: 'bg-blue-500/20 text-blue-300 border-blue-500/40' });
+                badges.push({ text: 'ট্রু-হিউ কালার বুস্ট সক্রিয়', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' });
+                aiReportText.innerHTML = `ছবিটির মূল রঙ অপরিবর্তিত রেখে ঘোলা ভাব দূর এবং উজ্জ্বলতা ও শার্পনেস নিখুঁতভাবে বাড়ানো হয়েছে।`;
+            }
+
+            badges.forEach(b => {
+                const span = document.createElement('span');
+                span.className = `text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${b.color}`;
+                span.textContent = b.text;
+                diagnosticBadges.appendChild(span);
+            });
+        }
+
+        function applySmartPreset(presetName) {
+            if (!previewSourceData) return;
+            const d = lastDiagnosis || { isVectorOrClipart: false, isPortrait: false };
+            let st = {
+                vectorlock: 0, inklock: 0, vibrance: 30, saturation: 10,
+                sharpness: 32, denoise: 1, dehaze: 15, whitebalance: 15,
+                hdr: 15, brightness: 2, trueHueLock: true, recolor: true
+            };
+
+            if (presetName === 'auto_quantum') {
+                if (d.isVectorOrClipart) {
+                    st = {
+                        vectorlock: 92, inklock: 75, vibrance: 55, saturation: 25,
+                        sharpness: 48, denoise: 2, dehaze: 22, whitebalance: 15,
+                        hdr: 0, brightness: 4, trueHueLock: false, recolor: true
+                    };
+                } else if (d.isPortrait) {
+                    st = {
+                        vectorlock: 0, inklock: 10, vibrance: 30, saturation: 8,
+                        sharpness: 32, denoise: 1, dehaze: 16, whitebalance: 20,
+                        hdr: 24, brightness: 3, trueHueLock: true, recolor: false
+                    };
+                } else {
+                    st = {
+                        vectorlock: 40, inklock: 30, vibrance: 45, saturation: 18,
+                        sharpness: 40, denoise: 1, dehaze: 24, whitebalance: 22,
+                        hdr: 20, brightness: 3, trueHueLock: true, recolor: true
+                    };
+                }
+            } else if (presetName === 'adobe_vector') {
+                st = {
+                    vectorlock: 95, inklock: 82, vibrance: 60, saturation: 28,
+                    sharpness: 52, denoise: 2, dehaze: 25, whitebalance: 15,
+                    hdr: 0, brightness: 5, trueHueLock: false, recolor: true
+                };
+            } else if (presetName === 'portrait_skin') {
+                st = {
+                    vectorlock: 0, inklock: 8, vibrance: 28, saturation: 6,
+                    sharpness: 30, denoise: 1, dehaze: 14, whitebalance: 22,
+                    hdr: 25, brightness: 4, trueHueLock: true, recolor: false
+                };
+            } else if (presetName === 'ultra_clear') {
+                st = {
+                    vectorlock: 50, inklock: 40, vibrance: 35, saturation: 15,
+                    sharpness: 65, denoise: 2, dehaze: 35, whitebalance: 20,
+                    hdr: 20, brightness: 3, trueHueLock: true, recolor: true
+                };
+            } else if (presetName === 'vivid_lively') {
+                st = {
+                    vectorlock: 65, inklock: 45, vibrance: 75, saturation: 35,
+                    sharpness: 42, denoise: 1, dehaze: 25, whitebalance: 18,
+                    hdr: 18, brightness: 5, trueHueLock: true, recolor: true
+                };
+            }
+
+            applySliderState(st, true);
+            showToast('স্মার্ট এআই প্রিসেট প্রয়োগ করা হয়েছে!');
+        }
+
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                applySmartPreset(btn.getAttribute('data-preset'));
+            });
+        });
+
+        resetAllBtn.addEventListener('click', () => {
+            if (!previewSourceData) return;
+            applySliderState({
+                vectorlock: 0, inklock: 0, vibrance: 0, saturation: 0,
+                sharpness: 0, denoise: 0, dehaze: 0, whitebalance: 0,
+                hdr: 0, brightness: 0, trueHueLock: true, recolor: false
+            }, true);
+            showToast('সব স্লাইডার রিসেট করা হয়েছে');
+        });
+
+        function scheduleRender() {
+            if (!previewSourceData) return;
+            clearTimeout(renderDebounceTimer);
+            renderDebounceTimer = setTimeout(() => {
+                const outputData = executeQuantumPipeline(previewSourceData, lastDiagnosis);
+                afterCtx.putImageData(outputData, 0, 0);
+                drawLiveHistogram(outputData);
+                updateSplitClip();
+            }, 25);
+        }
+
+        function drawLiveHistogram(imgData) {
+            const data = imgData.data;
+            const rBins = new Uint32Array(64);
+            const gBins = new Uint32Array(64);
+            const bBins = new Uint32Array(64);
+            let maxCount = 1;
+
+            const step = Math.max(4, Math.floor((data.length / 4) / 8000) * 4);
+            for (let i = 0; i < data.length; i += step) {
+                if (data[i + 3] < 30) continue;
+                const r = data[i] >> 2;
+                const g = data[i + 1] >> 2;
+                const b = data[i + 2] >> 2;
+                if (++rBins[r] > maxCount) maxCount = rBins[r];
+                if (++gBins[g] > maxCount) maxCount = gBins[g];
+                if (++bBins[b] > maxCount) maxCount = bBins[b];
+            }
+
+            const w = histogramCanvas.width;
+            const h = histogramCanvas.height;
+            histCtx.clearRect(0, 0, w, h);
+
+            const drawChannel = (bins, stroke, fill) => {
+                histCtx.beginPath();
+                histCtx.moveTo(0, h);
+                for (let i = 0; i < 64; i++) {
+                    const x = (i / 63) * w;
+                    const y = h - (bins[i] / maxCount) * (h - 4);
+                    histCtx.lineTo(x, y);
+                }
+                histCtx.lineTo(w, h);
+                histCtx.closePath();
+                histCtx.fillStyle = fill;
+                histCtx.fill();
+                histCtx.strokeStyle = stroke;
+                histCtx.lineWidth = 1.2;
+                histCtx.stroke();
+            };
+
+            drawChannel(rBins, '#f43f5e', 'rgba(244, 63, 94, 0.22)');
+            drawChannel(gBins, '#10b981', 'rgba(16, 185, 129, 0.22)');
+            drawChannel(bBins, '#06b6d4', 'rgba(6, 182, 212, 0.22)');
+        }
+
+        function updateSplitClip() {
+            if (!isSplitActive) {
+                beforeCanvas.classList.add('hidden');
+                splitSliderLine.classList.add('hidden');
+                return;
+            }
+            beforeCanvas.classList.remove('hidden');
+            splitSliderLine.classList.remove('hidden');
+            const pct = Math.max(0, Math.min(100, splitRatio * 100));
+            beforeCanvas.style.clipPath = `inset(0 0 0 ${pct}%)`;
+            splitSliderLine.style.left = `${pct}%`;
+        }
+
+        splitToggleBtn.addEventListener('click', () => {
+            isSplitActive = !isSplitActive;
+            splitToggleBtn.classList.toggle('bg-cyan-500/20', isSplitActive);
+            splitToggleBtn.classList.toggle('text-cyan-300', isSplitActive);
+            updateSplitClip();
+        });
+
+        loupeToggleBtn.addEventListener('click', () => {
+            isLoupeActive = !isLoupeActive;
+            loupeToggleBtn.classList.toggle('bg-purple-500/20', isLoupeActive);
+            loupeToggleBtn.classList.toggle('text-purple-300', isLoupeActive);
+            if (!isLoupeActive) magnifierLoupe.classList.add('hidden');
+        });
+
+        holdOriginalBtn.addEventListener('mousedown', () => {
+            if (!previewSourceData) return;
+            beforeCanvas.style.clipPath = 'none';
+            beforeCanvas.classList.remove('hidden');
+        });
+        window.addEventListener('mouseup', () => {
+            if (!previewSourceData) return;
+            updateSplitClip();
+        });
+
+        canvasWrapper.addEventListener('mousemove', (e) => {
+            const rect = afterCanvas.getBoundingClientRect();
+            const relX = (e.clientX - rect.left) / rect.width;
+            const relY = (e.clientY - rect.top) / rect.height;
+
+            if (isSplitActive && e.buttons === 1) {
+                splitRatio = Math.max(0.02, Math.min(0.98, relX));
+                updateSplitClip();
+            }
+
+            if (isLoupeActive && relX >= 0 && relX <= 1 && relY >= 0 && relY <= 1) {
+                magnifierLoupe.classList.remove('hidden');
+                magnifierLoupe.style.left = `${e.clientX - 88}px`;
+                magnifierLoupe.style.top = `${e.clientY - 88}px`;
+
+                const srcX = relX * afterCanvas.width;
+                const srcY = relY * afterCanvas.height;
+                const zoom = 3.0;
+                const sw = loupeCanvas.width / zoom;
+                const sh = loupeCanvas.height / zoom;
+
+                loupeCtx.clearRect(0, 0, loupeCanvas.width, loupeCanvas.height);
+                loupeCtx.imageSmoothingEnabled = false;
+                loupeCtx.drawImage(
+                    afterCanvas,
+                    srcX - sw / 2, srcY - sh / 2, sw, sh,
+                    0, 0, loupeCanvas.width, loupeCanvas.height
+                );
+            } else {
+                magnifierLoupe.classList.add('hidden');
+            }
+        });
+
+        canvasWrapper.addEventListener('mouseleave', () => {
+            magnifierLoupe.classList.add('hidden');
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!fullResImage) return;
+            processingLoader.classList.remove('hidden');
+            processingLoader.classList.add('flex');
+            const scaleFactor = parseInt(upscaleSelect.value) || 1;
+            loaderText.textContent = scaleFactor > 1
+                ? `${scaleFactor}x মাল্টি-স্টেপ আল্ট্রা HD আপস্কেল ও ডিপ রি-পেইন্ট হচ্ছে...`
+                : '১০০% অরিজিনাল আল্ট্রা HD রেজোলিউশনে সেভ হচ্ছে...';
+
+            setTimeout(() => {
+                const mimeType = formatSelect.value || 'image/png';
+                const ext = mimeType === 'image/jpeg' ? 'jpg' : (mimeType === 'image/webp' ? 'webp' : 'png');
+
+                // Use Multi-Step Super-Sampling Upscaler for 2x / 4x crisp output
+                const exportCanvas = createMultiStepUpscaledCanvas(fullResImage, scaleFactor, 6400);
+                const targetW = exportCanvas.width;
+                const targetH = exportCanvas.height;
+                const exportCtx = exportCanvas.getContext('2d', { willReadFrequently: true });
+
+                const fullSrcData = exportCtx.getImageData(0, 0, targetW, targetH);
+                const fullEnhanced = executeQuantumPipeline(fullSrcData, lastDiagnosis);
+
+                if (mimeType === 'image/jpeg') {
+                    const tmp = document.createElement('canvas');
+                    tmp.width = targetW; tmp.height = targetH;
+                    tmp.getContext('2d').putImageData(fullEnhanced, 0, 0);
+                    exportCtx.fillStyle = '#ffffff';
+                    exportCtx.fillRect(0, 0, targetW, targetH);
+                    exportCtx.drawImage(tmp, 0, 0);
+                } else {
+                    exportCtx.putImageData(fullEnhanced, 0, 0);
+                }
+
+                exportCanvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${currentFileName}-quantum-${scaleFactor}x.${ext}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+                    processingLoader.classList.add('hidden');
+                    processingLoader.classList.remove('flex');
+                    showToast(`আল্ট্রা HD ছবি (${targetW}×${targetH}) ডাউনলোড সম্পন্ন!`);
+                }, mimeType, 1.0);
+            }, 60);
+        });
+
+        viewportContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            viewportContainer.classList.add('drop-active');
+        });
+        viewportContainer.addEventListener('dragleave', () => {
+            viewportContainer.classList.remove('drop-active');
+        });
+        viewportContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            viewportContainer.classList.remove('drop-active');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                if (e.dataTransfer.files.length > 1) {
+                    openBatchProcessorWithFiles(e.dataTransfer.files);
+                } else {
+                    loadImageFile(e.dataTransfer.files[0]);
+                }
+            }
+        });
+
+        imageUpload.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                loadImageFile(e.target.files[0]);
+                imageUpload.value = '';
+            }
+        });
+
+        // Batch Processor Variables & Logic
+        const batchAddMoreInput = document.getElementById('batchAddMoreInput');
+        const batchModal = document.getElementById('batchModal');
+        const closeBatchModalBtn = document.getElementById('closeBatchModalBtn');
+        const batchCountBadge = document.getElementById('batchCountBadge');
+        const batchModeSelect = document.getElementById('batchModeSelect');
+        const startBatchBtn = document.getElementById('startBatchBtn');
+        const downloadZipBtn = document.getElementById('downloadZipBtn');
+        const batchStatusLabel = document.getElementById('batchStatusLabel');
+        const batchPercentLabel = document.getElementById('batchPercentLabel');
+        const batchProgressBar = document.getElementById('batchProgressBar');
+        const batchGridList = document.getElementById('batchGridList');
+
+        let batchFilesQueue = [];
+        let generatedZipBlob = null;
+        let isBatchRunning = false;
+
+        batchUpload.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                batchFilesQueue = [];
+                openBatchProcessorWithFiles(e.target.files);
+                batchUpload.value = '';
+            }
+        });
+
+        batchAddMoreInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                openBatchProcessorWithFiles(e.target.files, true);
+                batchAddMoreInput.value = '';
+            }
+        });
+
+        closeBatchModalBtn.addEventListener('click', () => {
+            if (isBatchRunning) {
+                showToast('দয়া করে প্রসেসিং শেষ হওয়া পর্যন্ত অপেক্ষা করুন...');
+                return;
+            }
+            batchModal.classList.add('hidden');
+        });
+
+        function openBatchProcessorWithFiles(fileList, append = false) {
+            if (!append) batchFilesQueue = [];
+            const validFiles = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+            if (validFiles.length === 0) {
+                showToast('কোনো সঠিক ইমেজ ফাইল পাওয়া যায়নি!');
+                return;
+            }
+
+            validFiles.forEach((file) => {
+                batchFilesQueue.push({
+                    id: 'file_' + Math.random().toString(36).substring(2, 9),
+                    file: file,
+                    status: 'অপেক্ষমান (Ready)',
+                    modeUsed: 'অটো এআই স্ক্যানের অপেক্ষায়'
+                });
+            });
+
+            generatedZipBlob = null;
+            downloadZipBtn.classList.add('hidden');
+            downloadZipBtn.disabled = true;
+            batchProgressBar.style.width = '0%';
+            batchPercentLabel.textContent = `0% (0/${batchFilesQueue.length})`;
+            batchStatusLabel.textContent = `মোট ${batchFilesQueue.length}টি ছবি অটোমেটিক বেস্ট প্রসেসিংয়ের জন্য প্রস্তুত`;
+            batchCountBadge.textContent = `${batchFilesQueue.length} টি ছবি`;
+
+            renderBatchQueueUI();
+            batchModal.classList.remove('hidden');
+        }
+
+        function renderBatchQueueUI() {
+            batchGridList.innerHTML = '';
+            batchFilesQueue.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.id = `batch_card_${item.id}`;
+                card.className = 'bg-slate-950/90 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between gap-2';
+                card.innerHTML = `
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-bold text-slate-200 truncate">${idx + 1}. ${item.file.name}</p>
+                        <p id="batch_meta_${item.id}" class="text-[10px] text-slate-400 truncate mt-0.5">${item.modeUsed}</p>
+                    </div>
+                    <span id="batch_badge_${item.id}" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold whitespace-nowrap">
+                        ${item.status}
+                    </span>
+                `;
+                batchGridList.appendChild(card);
+            });
+        }
+
+        function getAutoBestParamsForImage(diag, modeSetting) {
+            if (modeSetting === 'current_sliders') {
+                return {
+                    vectorlock: parseInt(controls.vectorlock.value) / 100,
+                    inklock: parseInt(controls.inklock.value) / 100,
+                    vibrance: parseInt(controls.vibrance.value) / 100,
+                    saturation: parseInt(controls.saturation.value) / 100,
+                    whitebalance: parseInt(controls.whitebalance.value) / 100,
+                    hdr: parseInt(controls.hdr.value) / 100,
+                    dehaze: parseInt(controls.dehaze.value) / 100,
+                    brightness: parseInt(controls.brightness.value),
+                    denoise: parseInt(controls.denoise.value),
+                    sharpness: parseInt(controls.sharpness.value) / 100,
+                    protectSkin: trueHueLockToggle.checked,
+                    enableRecolor: recolorToggle.checked,
+                    label: 'কাস্টম স্লাইডার মোড'
+                };
+            }
+
+            const usePortrait = modeSetting === 'portrait_skin' || (modeSetting === 'auto_smart' && diag.isPortrait);
+            if (usePortrait) {
+                return {
+                    vectorlock: 0,
+                    inklock: 0.10,
+                    vibrance: 0.28,
+                    saturation: 0.08,
+                    whitebalance: 0.18,
+                    hdr: 0.24,
+                    dehaze: 0.16,
+                    brightness: 3,
+                    denoise: 1,
+                    sharpness: 0.32,
+                    protectSkin: true,
+                    enableRecolor: false,
+                    label: 'বায়ো-স্কিন গার্ড (Portrait)'
+                };
+            }
+
+            return {
+                vectorlock: 0.92,
+                inklock: 0.75,
+                vibrance: 0.55,
+                saturation: 0.26,
+                whitebalance: 0.15,
+                hdr: 0,
+                dehaze: 0.22,
+                brightness: 4,
+                denoise: 2,
+                sharpness: 0.48,
+                protectSkin: false,
+                enableRecolor: true,
+                label: '5x5 ডিপ কালার রি-পেইন্ট (Vector/Animal)'
+            };
+        }
+
+        function loadSingleFileAsImage(file) {
+            return new Promise((resolve, reject) => {
+                const url = URL.createObjectURL(file);
+                const img = new Image();
+                img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+                img.onerror = (err) => { URL.revokeObjectURL(url); reject(err); };
+                img.src = url;
+            });
+        }
+
+        function canvasToBlobPromise(canvas, mimeType, quality = 1.0) {
+            return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), mimeType, quality));
+        }
+
+        startBatchBtn.addEventListener('click', async () => {
+            if (isBatchRunning || batchFilesQueue.length === 0) return;
+            if (typeof JSZip === 'undefined') {
+                showToast('ZIP ইঞ্জিন লোড হচ্ছে, ১ সেকেন্ড পর আবার ক্লিক করুন।');
+                return;
+            }
+
+            isBatchRunning = true;
+            startBatchBtn.disabled = true;
+            startBatchBtn.classList.add('opacity-50');
+            downloadZipBtn.classList.add('hidden');
+
+            const zip = new JSZip();
+            const scaleFactor = parseInt(upscaleSelect.value) || 1;
+            const mimeType = formatSelect.value || 'image/png';
+            const ext = mimeType === 'image/jpeg' ? 'jpg' : (mimeType === 'image/webp' ? 'webp' : 'png');
+            const selectedBatchMode = batchModeSelect.value;
+            const total = batchFilesQueue.length;
+            const usedNames = new Set();
+
+            for (let i = 0; i < total; i++) {
+                const item = batchFilesQueue[i];
+                const badgeEl = document.getElementById(`batch_badge_${item.id}`);
+                const metaEl = document.getElementById(`batch_meta_${item.id}`);
+                const cardEl = document.getElementById(`batch_card_${item.id}`);
+
+                if (badgeEl) {
+                    badgeEl.textContent = 'প্রসেসিং হচ্ছে...';
+                    badgeEl.className = 'text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold whitespace-nowrap';
+                }
+                if (cardEl) cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                batchStatusLabel.textContent = `ছবি প্রসেস হচ্ছে (${i + 1}/${total}): ${item.file.name}`;
+
+                try {
+                    const img = await loadSingleFileAsImage(item.file);
+
+                    const diagCanvas = document.createElement('canvas');
+                    const sampleScale = Math.min(1, 500 / Math.max(img.naturalWidth || img.width, img.naturalHeight || img.height));
+                    diagCanvas.width = Math.max(10, Math.round((img.naturalWidth || img.width) * sampleScale));
+                    diagCanvas.height = Math.max(10, Math.round((img.naturalHeight || img.height) * sampleScale));
+                    const diagCtx = diagCanvas.getContext('2d');
+                    diagCtx.drawImage(img, 0, 0, diagCanvas.width, diagCanvas.height);
+                    const diagData = diagCtx.getImageData(0, 0, diagCanvas.width, diagCanvas.height);
+                    const fileDiag = diagnoseImageCharacteristics(diagData);
+
+                    const bestParams = getAutoBestParamsForImage(fileDiag, selectedBatchMode);
+                    if (metaEl) metaEl.textContent = `✓ ${bestParams.label}`;
+
+                    const workCanvas = createMultiStepUpscaledCanvas(img, scaleFactor, 5400);
+                    const targetW = workCanvas.width;
+                    const targetH = workCanvas.height;
+                    const workCtx = workCanvas.getContext('2d', { willReadFrequently: true });
+
+                    const srcImageData = workCtx.getImageData(0, 0, targetW, targetH);
+                    const enhancedData = executeQuantumPipeline(srcImageData, fileDiag, bestParams);
+
+                    if (mimeType === 'image/jpeg') {
+                        const tmp = document.createElement('canvas');
+                        tmp.width = targetW; tmp.height = targetH;
+                        tmp.getContext('2d').putImageData(enhancedData, 0, 0);
+                        workCtx.fillStyle = '#ffffff';
+                        workCtx.fillRect(0, 0, targetW, targetH);
+                        workCtx.drawImage(tmp, 0, 0);
+                    } else {
+                        workCtx.putImageData(enhancedData, 0, 0);
+                    }
+
+                    const blob = await canvasToBlobPromise(workCanvas, mimeType, 1.0);
+                    workCanvas.width = 1; workCanvas.height = 1;
+                    diagCanvas.width = 1; diagCanvas.height = 1;
+
+                    let baseName = item.file.name.replace(/\.[^/.]+$/, '');
+                    let finalFileName = `${baseName}-enhanced.${ext}`;
+                    let counter = 1;
+                    while (usedNames.has(finalFileName)) {
+                        finalFileName = `${baseName}-enhanced-${counter}.${ext}`;
+                        counter++;
+                    }
+                    usedNames.add(finalFileName);
+
+                    zip.file(finalFileName, blob);
+
+                    if (badgeEl) {
+                        badgeEl.textContent = 'সম্পন্ন ✓';
+                        badgeEl.className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold whitespace-nowrap';
+                    }
+                } catch (err) {
+                    if (badgeEl) {
+                        badgeEl.textContent = 'ত্রুটি!';
+                        badgeEl.className = 'text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-bold whitespace-nowrap';
+                    }
+                }
+
+                const pct = Math.round(((i + 1) / total) * 100);
+                batchProgressBar.style.width = `${pct}%`;
+                batchPercentLabel.textContent = `${pct}% (${i + 1}/${total})`;
+                await new Promise(r => setTimeout(r, 20));
+            }
+
+            batchStatusLabel.textContent = 'সবগুলো ছবি প্রসেস সম্পন্ন! এখন ZIP ফাইল তৈরি হচ্ছে...';
+            generatedZipBlob = await zip.generateAsync({ type: 'blob' });
+
+            batchStatusLabel.textContent = `১০০% সম্পন্ন! ${total}টি ছবির আল্ট্রা HD ZIP ফাইল ডাউনলোডের জন্য প্রস্তুত।`;
+            downloadZipBtn.disabled = false;
+            downloadZipBtn.classList.remove('hidden');
+            startBatchBtn.disabled = false;
+            startBatchBtn.classList.remove('opacity-50');
+            isBatchRunning = false;
+
+            triggerZipDownload();
+        });
+
+        function triggerZipDownload() {
+            if (!generatedZipBlob) return;
+            const zipUrl = URL.createObjectURL(generatedZipBlob);
+            const a = document.createElement('a');
+            a.href = zipUrl;
+            a.download = `quantum-studio-batch-${batchFilesQueue.length}-images.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(zipUrl), 15000);
+            showToast(`${batchFilesQueue.length}টি ছবির ZIP ফাইল ডাউনলোড শুরু হয়েছে!`);
+        }
+
+        downloadZipBtn.addEventListener('click', triggerZipDownload);
+    </script>
+</body>
+</html>
